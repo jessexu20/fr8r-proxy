@@ -21,9 +21,9 @@ LABEL git-commit-id=${git_commit_id} \
 
 RUN apt-get update \
  && apt-get -y install --no-install-recommends ca-certificates curl git \
- && curl -sSLO https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz \
- && tar -C /usr/local -xzf go1.5.1.linux-amd64.tar.gz \
- && rm -f go1.5.1.linux-amd64.tar.gz
+ && curl -sSLO https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz \
+ && tar -C /usr/local -xzf go1.6.2.linux-amd64.tar.gz \
+ && rm -f go1.6.2.linux-amd64.tar.gz
 
 WORKDIR /api-proxy
 COPY src/ ./src/
