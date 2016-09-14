@@ -1,9 +1,0 @@
----
-
-- name: Set etcd_deploy to True because Flannel requires etcd
-  set_fact:
-    etcd_deploy: True
-
-- name: Set use_kube_system_kubedns
-  set_fact:
-    use_kube_system_kubedns: True

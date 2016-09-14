@@ -1,7 +1,0 @@
-# Building the proxy image:
-
-  - name: build the {{proxy_image_name}} image (this may take a few minutes)
-    become: true
-    command: docker build -t "{{proxy_image_name}}" "{{playbook_dir | dirname}}/proxy"
-
-  - debug: msg="Finished Building the image, now building the container"

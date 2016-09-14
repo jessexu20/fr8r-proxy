@@ -1,227 +1,277 @@
-## OpenRadiant
+# OpenRadiant Proxy
+Proxy is the component of OpenRadiant that intercepts the communication between
+the clients (Docker or Kubernetes) and the OpenRadiant cluster, using HTTP session
+hijacking. It validates the tenant and provided TLS certificates.
+It also redirects to proper shard when cluster sharing is used.
 
-[![Travis Build Status](https://travis-ci.org/containercafe/containercafe.svg?branch=master)](https://travis-ci.org/containercafe/containercafe)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+More detailed documentation about proxy is available [here](../docs/proxy.md)
 
-OpenRadiant is a modular platform for enterprise container-native
-devops. OpenRadiant supports Kubernetes, and will eventually also
-support the docker APIs on the same infrastructure.  OpenRadiant
-supports multi-tenancy and sharding.  The OpenRadiant platform can be
-extended by additional componentry, such as: support for using Mesos
-(including making Kubernetes act as a Mesos framework), support for
-using a CloudFoundry installation as the source of identities, support
-for using Neutron tenant networks to isolate OpenRadiant tenants in
-the network.
+## Proxy Environment Setup and Development
+Steps below explain the basic configuration and setup to run Proxy. This setup
+assumes the target system already has Docker installed, the Proxy will be deployed
+locally to manage Swarm and Kubernetes instances also installed locally, using
+the ansible scripts described in [Quick Start](../README.md#quick-start)
+For other deployments, one can still follow these steps, with adjustments provided below.
 
-Features of the OpenRadiant platform include:
-* Kubernetes
-* Eventually Swarm (original, not "swarm mode" introduced in Docker 1.12)
-* Multi-tenancy - with or without Bring-Your-Own-IPv4
-* Multi-sharding
-* HA control plane in each shard
-* Ansible-based create/update/destroy tooling
-* Openness to a variety of sources of authentication
-* Control plane secured by TLS
-* Openness to support for a variety of Software-Defined-Network technologies
-* Live container crawling
+The steps below work best with native docker [for Mac, Unix or Windows](http://www.docker.com/products/overview)
+It would also work with `docker-machine`, but it requires additional steps. Look
+for /[DOCKER MACHINE] tag.
 
-OpenRadiant is a work in progress, as a collaboration between a
-central OpenRadiant team and other teams that use it to build more
-specific and capable platforms.
-
-* [Architecture Overview](#architecture-overview)
-* [Tiny Example](examples/tiny-example.md)
-* [Ansible Principles](#ansible-principles)
-* [The container images](docs/building-images.md)
-* [The installer machine](#the-installer-machine)
-* [Installing OpenRadiant](#installing-openradiant)
-* [Code of Conduct](#code-of-conduct)
-* [Contributing to the project](#contributing-to-the-project)
-* [Maintainers](#maintainers)
-* [Communication](#communication)
-* [Proxy documentation](proxy/README.md)
-* [Mesos clues](mesos-clues.md)
-* [Live Container crawling](#live-container-crawling)
-* [Learn concepts and commands](#learn-concepts-and-commands)
-* [License](#license)
-* [Issues](#issues)
-
-### Architecture Overview
-
-OpenRadiant is software that you can use, or extend to produce more
-capable software that you use, to operate an enterprise
-container-native devops service.
-
-One operating instantiation of the full platform is called an
-environment, and it contains one or more shards that operate
-independently of each other.  Each shard provides an independent
-installation of Kubernetes, and --- via extension --- additional
-platforms such as Mesos and/or Swarm.  There is an outer control plane
-with a proxy API server that implements the Kubernetes (and eventually
-Docker/SwarmV1) APIs --- with appropriate restrictions and extensions
---- by appropriately transforming each RPC and dispatching it to the
-appropriate shard.
-
-You can operate OpenRadiant with just one shard.
-
-In a shard there are worker nodes and master nodes.  The Kubernetes
-(and eventually Swarm) workload is dispatched to the worker nodes.
-The master nodes run the Kubernetes, eventually Swarm, and any
-extension's master components in an HA configuration.  We are working
-on a better solution than Mesos to coordinate resource allocation
-decisions between Kubernetes and Swarm.
-
-OpenRadiant includes Ansible-based installation technology to
-instantiate an OpenRadiant environment.  An installer machine acts as
-Ansible controller to install OpenRadiant in a target environment.
-The installation is parameterized by some Ansible variables files that
-describe the desired target environment.
-
-OpenRadiant deploys Kubernetes in containers.  You can choose whatever
-version you want.  Your configure your choice of image (including
-tag).  See the doc about
-[the relevant configuration variables](docs/ansible.md#primary-shard-variables-that-have-defaults)
-and
-[where to put your settings for those variables](docs/ansible.md#additional-files-for-setting-ansible-variable-values).
-
-The Ansible playbooks strive to meet the Ansible ideal of achieving a
-prescribed desired state, and can thus be used to update as well as
-install.  However, there are limits to the space of initial states
-with which these playbooks can cope.
-
-See [the architecture doc](docs/architecture.md) for more details.
-
-
-### Ansible principles
-
-The structure of the Ansible playbooks and roles, and the related
-conventions for how environments and shards are organized and how they
-are described by files, are important parts of OpenRadiant's
-modularity.  This includes the inventory contracts that establish the
-orthogonality between (a) how machines are provisioned and (b) how
-software is installed on them.  This also includes the concept of
-networking plugins, the convention for where temporary and
-not-temporary files are kept on the installer machine(s), and the
-considerations for deploying in a context where external repositories
-can not be reached.  See [the Ansible doc](docs/ansible.md) for
-details.
-
-
-### The installer machine
-
-Following are instructions on how to create a usable installer
-machine.  In the near future we hope to also provide a Docker image of
-a usable installer machine.
-
-All the controller machine really needs is to have a copy of
-OpenRadiant, be able to run Ansible playbooks as the Ansible
-controller machine, and be able to serve an Ansible managed node for
-certain Ansible modules.  The following shows ways to accomplish these
-using Linux shell commands.  For other operating systems you could do
-something analogous.
-
-The controller machine must have git installed.
-
-Checkout this project along with all its submodules:
+### Step 1: Get proxy code and run it
+[*This will be done by ansible install script*]
+If you have not done this already, clone the repository:
 
 ```bash
-git clone --recursive https://github.com/containercafe/containercafe.git
-cd openradiant
+git clone git@github.com:containercafe/containercafe.git
+# or
+git clone https://github.com/containercafe/containercafe.git
 ```
 
-The controller machine must have Ansible installed, including its
-`netaddr` module.  See
-[our Ansible doc](docs/ansible.md#ansible-versions-and-bugs-and-configuration)
-for details on Ansible versions.  One way to get these two installed
-is to use our `requirements.txt` file, as follows.
+#### Build proxy image
+The latest working image of API Proxy is already built and publicly available
+[https://hub.docker.com/r/containercafe/api-proxy/](https://hub.docker.com/r/containercafe/api-proxy/)
+To build the image locally, using your local code, execute:
 
 ```bash
-pip install -r requirements.txt
+cd proxy
+./builddocker.sh
+```
+To publish the image to Docker Hub see the steps [here](https://github.com/containercafe/containercafe/blob/master/docs/building-images.md#containercafeproxy)
+
+The proxy image is very small but it's slow to build.
+If you are developing on the proxy you can build a bigger image in less time, execute:
+```bash
+cd proxy
+./builddocker.sh -f Dockerfile.dev
 ```
 
-In order to use that method, the controller machine must have Python's
-`pip` installed.  One way to accomplish that is to install the
-`python-pip` package using your operating system's package manager.
-Another way is to use Python's `easy_install` to install `pip`.
+#### Run proxy as a container
+[*This will be done by ansible install script*]
+Proxy service will be installed as a container on your default docker host.
+You can either start the proxy based on the public image or using image based
+on your own code (see above)
 
-Another way to get the `netaddr` module is to install `python-netaddr`
-using the operating system's package manager.
-
-The Ansible playbooks use Ansible's `unarchive` module with the
-controller also being the managed node.  This requires, as implied by
-the note at
-https://docs.ansible.com/ansible/unarchive_module.html#notes, that the
-controller machines must implement the `gtar` command.  On MacOS 10
-you can accomplish this by `brew install gnu-tar`.
-
-
-### Installing OpenRadiant
-
-To create/update an OpenRadiant environment, invoke the
-`ansible/env-basics.yml` playbook.  This will create the certificates
-and keys that are common throughout the environment, and deploy the
-API proxy.  Following is an example invocation.
+When starting the proxy, provide the environment name e.g. _dev-vbox_:
 
 ```bash
-cd ansible
-ansible-playbook -v env-basics.yml -e env_name==${env_kind}-${env_loc} -e envs=${envs}
+cd openradiant/proxy
+./rundocker.sh <env_name>
 ```
 
-To create/update an OpenRadiant shard, invoke the `ansible/shard.yml`
-playbook.  Following is an example invocation.
+FOR PROXY DEVELOPERS:
+
+to run the local image of the proxy, use -i <image_name> flag:
 
 ```bash
-cd ansible
-ansible-playbook -v shard.yml -e cluster_name=${shard_name} -e envs=${envs} -e network_kind=flannel
+./rundocker.sh <env_name> -i api-proxy
 ```
 
-The shard name, AKA cluster name, is explained in
-[the inventory contract doc](docs/ansible.md#the-inventory-contract)
-and this variable must be defined in the Ansible invocation.  Two
-other variables must also be defined, as mentioned in that document:
-`envs` and `network_kind`.
+there is also an option available to start the api proxy in non-secure mode, useful
+for interaction with Nginx. It will run without TLS input and allows passing
+the API key in a header of a request instead of certificate.
+The header name is "X-Tls-Client-Dn". See the manual example below.
 
-See also [the deployment doc](docs/deploying.md).
+A complete syntax rundocker.sh is here:
 
-
-### Live container crawling
-It is essentially an agentless system crawler that offers a
-native and seamless framework for operational visibility and analytics.
-It makes use of virtualization and containerization abstractions together with
-introspection techniques to provide complete visibility into running entities like
-containers without modifying, instrumenting, or accessing the end user context.
-
-This is an opensource technology. For details visit [agentless-system-crawler](https://github.com/cloudviz/agentless-system-crawler).
-For how to use crawler in OpenRadiant environment, see [ link ](crawler/README.md)
-
-### Code of Conduct
-Participation in the OpenRadiant community is governed by the OpenRadiant [Code of Conduct](CONDUCT.md)
-
-### Contributing to the project
-We welcome contributions to the OpenRadiant Project in many forms. There's always plenty to do! Full details of how to contribute to this project are documented in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-### Maintainers
-The project's [maintainers](MAINTAINERS.txt): are responsible for reviewing and merging all pull requests and they guide the over-all technical direction of the project.
-
-### Communication
-We use \[TODO] [OpenRadiant Slack](https://OpenRadiant.slack.org/) for communication between developers.
-
-### Learn concepts and commands
-
-Browse TBD to learn more. Here are some topics you may be
-interested in:
-
-TBD
+```bash
+Syntax: rundocker.sh <env_name> [<args>]
+Where:
+    env_name - name of the environment, e.g: dev-vbox
+    args:
+    -d - run api-proxy container in the background (optional)
+    -l [INFO, WARNING, ERROR, FATAL] - set the log level for the proxy (optional)
+    -v [non-negative integer] - set the log verbosity for the proxy (optional)
+    -n - configuration for running with Nginx, no-SSL (optional)
+    -i [image_name] - run local image (optional), instead of public image [containercafe/api-proxy] (default)
+```
 
 
-### License
+This will start the Proxy as a container named `api-proxy`, running in the current
+terminal, on port specified in [Dockerfile](Dockerfile) e.g:
+```
+EXPOSE 8087
+CMD ["/api-proxy/bin/api-proxy", "8087"]
+```
 
-Copyright 2015-2016 IBM Corporation
+The Proxy container mounts the volume to the following local location:
+```
+~/.openradiant/envs/<env_name/
+e.g:
+~/.openradiant/envs/dev-vbox/
+```
+And they are mounted locally to `/opt/tls_certs/` from the container.
 
-Licensed under the [Apache License, Version 2.0 (the "License")](http://www.apache.org/licenses/LICENSE-2.0.html).
+If you want to run the Proxy as background container (daemon), use the `-d` flag:
+```
+./rundocker.sh <env_name> -d
+```
 
-Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "as is" basis, without warranties or conditions of any kind, either express or implied. See the license for the specific language governing permissions and limitations under the license.
+The Proxy container can be seen there along with its logs:
+```
+docker ps
+docker logs -f api-proxy
+```
 
-### Issues
+To set a custom log level and/or log verbosity use the `-l` and `-v` flags:
+```
+./rundocker.sh <env_name> -l <INFO,WARNING,ERROR,FATAL> -v <non-negative integer>
+```
 
-Report bugs, ask questions and request features [here on GitHub](../../issues).
+#### Run proxy as a script
+If you don't want to run the Proxy as a container, you can run directly as GoLang
+application. This requires Go libraries installed, proxy code compiled and added
+to go path.
+Review [Dockerfile](Dockerfile) for more details.
+Setup the environment and start the application:
+```bash
+source ./set_local_env.sh
+./start_proxy.sh
+```
+NOTE: There is a problem when running the proxy as a script on mac. (See the
+issue [#10](https://github.com/containercafe/containercafe/issues/10) Mac implements
+their own native SSL libraries for curl, therefore passing certs that are not
+in the keychain is a bit problematic. Install curl via Homebrew:
+`brew install curl`, keep the native curl, update your PATH to point at the new
+curl executable location. Now you should be able to run the scripts that invoke
+curl commands with certs.
+
+
+
+### Step 2: Creating a tenant (account administrator)
+When proxy runs as a container on the same host, just open a new terminal and
+follow the steps below. When proxy runs on a different docker host, ssh to this
+host first:
+
+```bash
+cd examples/vagrant
+vagrant ssh proxy
+```
+
+Go the proxy directory and then execute the script to create TLS certificates
+and API key for the given tenant. The example is using tenant `test1`.
+This script also requires the name and the IP of the shard and proxy
+E.g.
+```
+docker ps
+docker exec api-proxy /api-proxy/create_tenant.sh <tenant> <shard_name> <shared_ip> <api_proxy_ip>
+docker exec api-proxy /api-proxy/create_tenant.sh test1 radiant01 192.168.10.2 192.168.10.4
+```
+
+This command will display the details about the newly created TLS certs, including
+their location. Certificates are created on the mounted volumes, therefore they
+are available inside the proxy container and for the current terminal.
+
+You can create as many tenants as you like.
+
+At the bottom of the output the script displays the docker environment setup for
+the newly created tenant, including the location of the certs. Here is the sample
+output:
+```bash
+# Setup docker environment:
+export DOCKER_HOST=localhost:8087
+export DOCKER_TLS_VERIFY=1
+export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg
+
+# Setup kubernetes environment:
+export KUBECONFIG=~/.openradiant/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg/kube-config
+```
+Copy and paste these commands in *a new terminal* (otherwise will no be able to
+  make anymore calls to proxy container).
+
+Now you should be able to execute commands using OpenRadiant tenant that you
+just created:
+
+```
+docker ps
+# create a new container:
+docker run -d --name test --net none -m 128m mrsabath/web-ms
+docker inspect test
+
+kubectl get pods
+# create a new pod
+# assuming you are in openradiant/proxy directory:
+kubectl create -f ../examples/apps/k8s/pod-web.yaml
+
+# create a new deployment:
+kubectl run k1 --image=busybox sleep 864000
+kubectl get deployment
+
+# now you should be able to list all your Kubernetes containers using docker command:
+docker ps
+
+# you can also try ReplicationController, ReplicaSet and Deployments:
+kubectl create -f ../examples/apps/k8s/nginx-rc.yaml
+kubectl create -f ../examples/apps/k8s/frontend-rs.yaml
+kubectl run test-run --image=mrsabath/web-ms:v3
+
+kubectl get rc
+kubectl get rc
+kubectl get deployments
+
+```
+To run the proxy against a different OpenRadiant shard, pass the IP of this shard
+as additional parameter of the script `create_tenant.sh`. E.g:
+```
+docker exec api-proxy /api-proxy/create_tenant.sh test2 radiant02 192.168.10.11 192.168.10.4
+```
+
+You can also manually change the values in "/api-proxy/creds.json" file that lists
+all the valid tenants.  
+To modify the value in the running container:
+```
+docker exec -it api-proxy /bin/bash
+```
+
+### To view the content of the current authorization file:
+
+```bash
+docker exec api-proxy cat /opt/tls_certs/creds.json
+```
+
+Every entry of the `creds.json` has this format:
+```json
+{"Status":200, "Node":"192.168.10.2", "Docker_id":"", "Container":"", "Swarm_shard":true, "Tls_override":true, "Space_id":"sample_entry", "Reg_namespace":"swarm", "Apikey":"PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4", "Orguuid":"orgname", "Userid":"userid", "Endpoint_type":"radiant", "TLS_path":"/opt/tls_certs/radiant01/PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4"}
+```
+
+
+**NOTE**: All default config options are defined in the [Dockerfile](Dockerfile),
+and can be overridden using the docker -e option on [startup](rundocker.sh)
+
+## Running request manually, without the kubectl or docker clients
+API Proxy can be started with non-SSL, using -n flag (see above). Call must include
+the Apikey value in the header. Apikey is the random string in creds.json file
+for your tenant. E.g:
+
+```bash
+export APIKEY=PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4
+export PROXY=192.168.10.4:8087
+curl -XGET -H "X-Tls-Client-Dn: /CN=$APIKEY" -H "Content-Type: application/json" $PROXY/api
+```
+
+## Running Test Scripts
+There are 2 type of tests:
+
+* test container for proxy running as a container [proxy-test/docker/README.md](proxy-test/docker/README.md)
+
+* test scripts for proxy running as a container [proxy-test/README.md](proxy-test/README.md)
+
+
+## Hints and Troubleshooting Errors
+
+ * `Error response from daemon: client is newer than server (client API version: 1.24, server API version: 1.22)`
+ run `export DOCKER_API_VERSION=1.22` before running any docker commands.
+
+ * `An error occurred trying to connect: Get https://localhost:8087/v1.21/images/4a419cdeaf69/json: tls: oversized record received with length 20527[]`
+ In order to fix this problem, use `DOCKER_TLS_VERIFY=""` prefix for running 'docker' command
+
+ * `docker: Error response from daemon: Task launched with invalid offers: Offer ea1a4d71-cf69-4292-90e7-530c77a5458b-O1 is no longer valid.`
+ There is a caching problem on Mesos. Issue [#33](https://github.com/containercafe/containercafe/issues/33)
+ is tracking it. Simply just repeat your last command. It should purge the cache
+ and work again.
+
+ * `docker: Error response from daemon: driver failed programming external connectivity on endpoint hjproxy (0910f89f1b27f3b05081a0bcec3ceadb6d335873d191b3f055ff82257cf77e5d): Error starting userland proxy: write /port/tcp:0.0.0.0:8087:tcp:172.17.0.2:8087/ctl: errno 526.` Please make sure no
+ other process is running on port specified for proxy. Standalone proxy test on 8087?
+
+ * `Could not read CA certificate "~/.openradiant/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem": open ~/.openradiant/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem: no such file or directory`
+ Are you sure you are running your docker commands from `openradiant/proxy/`
+ directory?

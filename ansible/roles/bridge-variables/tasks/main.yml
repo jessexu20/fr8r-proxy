@@ -1,5 +1,0 @@
----
-
-- name: Set use_kube_system_kubedns
-  set_fact:
-    use_kube_system_kubedns: True
