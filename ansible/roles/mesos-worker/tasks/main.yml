@@ -24,6 +24,17 @@
   shell: docker pull "{{ mesos_slave_image }}"
   when: infrastructure_docker_registry_type == 'v1'
 
+- name: ensure Mesos temp dir exists
+  file:
+    path: /var/tmp/mesos
+    state: directory
+
+- name: ensure Meos temp dir is a mount point
+  shell: grep /var/tmp/mesos /etc/mtab || mount --bind /var/tmp/mesos /var/tmp/mesos
+
+- name: set mount propagation mode of Mesos temp dir
+  command: mount --make-rshared /var/tmp/mesos
+
 - name: deploy mesos slave
   docker:
     name: mesos
@@ -64,6 +75,7 @@
       - /opt/stack:/opt/stack:ro
       - /usr/libexec/kubernetes/kubelet-plugins/net/exec:/usr/libexec/kubernetes/kubelet-plugins/net/exec:ro
       - "{{ k8s_cert_dir }}:{{ k8s_cert_dir }}:ro"
+  when: no
 
 - name: check if restart of mesos slave is needed
   docker:
@@ -105,4 +117,48 @@
       - /opt/stack:/opt/stack:ro
       - /usr/libexec/kubernetes/kubelet-plugins/net/exec:/usr/libexec/kubernetes/kubelet-plugins/net/exec:ro
       - "{{ k8s_cert_dir }}:{{ k8s_cert_dir }}:ro"
-  when: hostvars['localhost']['regenerate_all_certs'] is defined
+  when: hostvars['localhost']['regenerate_all_certs'] is defined and False
+
+- name: test whether there is a Mesos slave container
+  shell: docker inspect mesos && echo AOK || echo no good
+  register: rslt
+
+- name: create the Mesos slave container
+  when: "'AOK' not in rslt.stdout"
+  shell: >
+    docker run
+    -d
+    --name=mesos
+    --restart=always
+    --privileged
+    --network=host
+    --pid=host
+    --volume=/openstack/docker:/openstack/docker:rw
+    --volume=/var/tmp/hermes:/tmp/hermes:rw
+    --volume=/root/stackrc:/root/stackrc:ro
+    --volume=/var/tmp/mesos:/var/tmp/mesos:rw,rshared
+    --volume=/var/log/mesos:/var/log/mesos:rw
+    --volume=/var/run:/var/run:rw
+    --volume=/var/lib/docker:/var/lib/docker:rw
+    --volume=/cgroup:/cgroup
+    --volume=/sys:/sys
+    --volume=/dev:/dev
+    --volume=/usr/bin/docker:/usr/bin/docker:ro
+    --volume=/usr/local/bin/neutron:/usr/local/bin/neutron:ro
+    --volume=/lib/x86_64-linux-gnu/libsystemd-journal.so.0:/lib/x86_64-linux-gnu/libsystemd-journal.so.0:ro
+    --volume=/usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7
+    --volume=/opt/cni/bin:/opt/cni/bin:rw
+    --volume=/opt/stack:/opt/stack:ro
+    --volume=/usr/libexec/kubernetes/kubelet-plugins/net/exec:/usr/libexec/kubernetes/kubelet-plugins/net/exec:ro
+    --volume="{{ k8s_cert_dir }}:{{ k8s_cert_dir }}:ro"
+    "{{mesos_slave_image}}"
+    --work_dir=/var/tmp/mesos
+    --log_dir=/var/log/mesos
+    --master={{ zookeeper_url }}/mesos
+    --isolation=cgroups
+    --containerizers=docker,mesos
+    --resources="{{mesos_slaves_resources}}"
+    --ip={{inventory_hostname}}
+    --no-hostname_lookup
+    --executor_registration_timeout=300secs
+    "{{role}}"
