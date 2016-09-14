@@ -2,7 +2,7 @@
 
 ## openradiant/remoteabac
 
-```
+``` bash
 cd openradiant/remoteabac
 docker login (with dockerhub creds)
 docker build -t openradiant/remoteabac .
@@ -25,7 +25,7 @@ docker push containercafe/api-proxy
 
 Building is straightforward:
 
-```
+``` bash
 cd openradiant/misc/dockerfiles/km
 docker login (with dockerhub creds)
 docker build -t openradiant/km:$tag .
