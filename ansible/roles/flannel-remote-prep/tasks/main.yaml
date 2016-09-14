@@ -1,6 +1,0 @@
----
-
-- include: flannel-config-in-etcd.yaml
-  when: inventory_hostname == groups['etcd-' ~ cluster_name][0]
-
-- include: runs-flanneld.yaml

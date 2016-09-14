@@ -1,2 +1,0 @@
-[mesos-cloud]
-	mesos-master = zk://{% for host in groups['zk-' ~ cluster_name] %}{{ host }}:{{ zookeeper_port }}{% if not loop.last %},{% endif %}{% endfor %}/mesos

@@ -1,3 +1,0 @@
-[submodule "crawler/agentless-system-crawler"]
-	path = crawler/agentless-system-crawler
-	url = https://github.com/cloudviz/agentless-system-crawler.git

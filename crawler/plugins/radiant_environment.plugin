@@ -1,8 +1,0 @@
-[Core]
-Name = Radiant Environment
-Module = radiant_environment
-
-[Documentation]
-Author = IBM
-Version = 0.1
-Description = open radiant environment

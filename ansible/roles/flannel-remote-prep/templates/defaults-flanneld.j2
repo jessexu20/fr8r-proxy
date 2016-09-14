@@ -1,4 +1,0 @@
-FLANNEL_OPTS="--etcd-endpoints={% for host in groups['etcd-' ~ cluster_name] %}http://{{ host }}:4001{% if not loop.last %},{% endif %}{% endfor %} \
- --ip-masq \
- --iface={{ network_interface }} \
-"

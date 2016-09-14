@@ -1,4 +1,0 @@
----
-
-- name:  update /etc/hosts to use inventory IP for hostname
-  replace: dest="/etc/hosts" regexp="^(?=.*{{ ansible_nodename }})(?!.*127.0.1.1).*" replace="{{ inventory_hostname }} {{ ansible_hostname }}"
