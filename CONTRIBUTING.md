@@ -26,7 +26,7 @@ We are using the [GitHub Flow](https://guides.github.com/introduction/flow/) pro
   1. Add the upstream repository as a remote
 
   ```bash
-  cd fr8r-ansible
+  cd fr8r-proxy
   git remote add upstream https://github.com/fr8r/fr8r-proxy.git
   ```
   1. Please follow the steps documented in [https://github.com/fr8r/fr8r-ansible/blob/master/CONTRIBUTING.md#to-work-on-something-whether-a-new-feature-or-a-bugfix](https://github.com/fr8r/fr8r-ansible/blob/master/CONTRIBUTING.md#to-work-on-something-whether-a-new-feature-or-a-bugfix)
