@@ -44,8 +44,14 @@ var inboundFilters = k8s.NewFilterCollection()
 
 //called from init() of the package
 func InitKubeHandler() {
-	inboundFilters.AddReplaceFilter("host", "Pod", "spec", "nodeName")
-	inboundFilters.AddReplaceFilter("1.1.1.1", "Pod", "status", "hostIP")
+	// Pod filters
+	inboundFilters.AddReplaceFilter("host", "Pod", k8s.NotNilSelector("spec", "nodeName"), "nodeName")
+	inboundFilters.AddReplaceFilter("1.1.1.1", "Pod", k8s.NotNilSelector("status", "hostIP"), "hostIP")
+
+	// Event filters
+	inboundFilters.AddReplaceFilter("host", "Event", k8s.NotNilSelector("source", "host"), "host")
+	inboundFilters.AddRegexFilter("\\sto\\s.+$", " to host", "Event", k8s.IsEqualsSelector("Scheduled", "reason"), "message")
+	inboundFilters.AddRegexFilter("\\snode\\s\\([^)]+\\)", " node (host)", "Event", k8s.IsEqualsSelector("FailedScheduling", "reason"), "message")
 }
 
 // public handler for Kubernetes
