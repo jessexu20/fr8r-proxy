@@ -30,7 +30,7 @@ docker exec api-proxy cat /opt/tls_certs/creds.json
 The certificate creation script will output few export statements. For example: <br />
 ```bash
 # Setup docker environment:
-export DOCKER_HOST=localhost:8087
+export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I
 

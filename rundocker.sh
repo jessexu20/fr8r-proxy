@@ -90,9 +90,9 @@ function main {
     
     set -x
     # start new container instance using public api proxy image. Map the volume to CERTS
-    #docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 8087:8087 -e "env_name=$env_name" --name api-proxy containercafe/api-proxy
+    #docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 6969:6969 -e "env_name=$env_name" --name api-proxy containercafe/api-proxy
     # to run your own image, built using `builddocker.sh` script, comment out the line above on un-comment below:
-    docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 8087:8087 -e "env_name=$env_name" --name api-proxy $IMG
+    docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 6969:6969 -e "env_name=$env_name" --name api-proxy $IMG
 }
 
 function copy_certs {

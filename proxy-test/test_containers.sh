@@ -10,7 +10,7 @@ Syntax: ${0} -l <proxy_location> -n <network_id> -t <tenant_id> -k <test_kube?> 
 
 Where:
     proxy_location =
-        local - test is targeting local instance of proxy (localhost:8087). With proxy running on a container, this should be the option in use. (default) 
+        local - test is targeting local instance of proxy (localhost:6969). With proxy running on a container, this should be the option in use. (default) 
         dev-mon01 - test is targeting remote instance (https://containers-api-dev.stage1.ng.bluemix.net:9443)
 
     network_id = id of network element to be inspected (currently unsupported - default is empty)
@@ -143,7 +143,7 @@ fi
 
 case "$PROXY_LOC" in 
     "local")
-        export DOCKER_HOST=localhost:8087
+        export DOCKER_HOST=localhost:6969
         export DOCKER_TLS_VERIFY=1
         ;;
     "dev-mon01")

@@ -9,7 +9,7 @@ function make_kubeconfig {
 apiVersion: v1
 clusters:
 - cluster:
-    server: https://${PROXY_IP}:8087
+    server: https://${PROXY_IP}:6969
     certificate-authority: ca.pem
   name: radiant
 contexts:

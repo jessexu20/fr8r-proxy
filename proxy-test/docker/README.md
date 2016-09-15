@@ -48,7 +48,7 @@ Located at /opt/tls_certs/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WX
 NOTE: the following commands must be executed from openradiant/proxy directory
 
 # Setup docker environment:
-export DOCKER_HOST=localhost:8087
+export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 

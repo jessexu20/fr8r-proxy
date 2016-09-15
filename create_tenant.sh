@@ -86,7 +86,7 @@ fi
 append_to_creds "$stub_auth_file"
 
 # Setup the environment
-DOCKER_HOST="$PROXY_IP:8087"
+DOCKER_HOST="$PROXY_IP:6969"
 DOCKER_TLS_VERIFY=1
 if [ "$CERT_ROOT" = "" ] ; then
     # when running from the container, specify the path to shared volume
@@ -121,7 +121,7 @@ export KUBECONFIG=$DOCKER_CERT_PATH/kube-config
 ENV
 
 # Initilize the kubernetes tenant
-RC=`curl -w "%{http_code}" -k -XPOST -s -o /dev/null --cert "$TLS_dir/cert.pem" --key "$TLS_dir/key.pem" --cacert "$TLS_dir/ca.pem" -H "Content-Type: application/json"  https://localhost:8087/kubeinit  2>&1` 
+RC=`curl -w "%{http_code}" -k -XPOST -s -o /dev/null --cert "$TLS_dir/cert.pem" --key "$TLS_dir/key.pem" --cacert "$TLS_dir/ca.pem" -H "Content-Type: application/json"  https://localhost:6969/kubeinit  2>&1` 
 if [ "$RC" != "200" ] ; then
    echo "ERROR: Could not initialize kubernetes tenant"
 fi

@@ -22,7 +22,7 @@ Copy the `Apikey` for the given space and set as user (below)
 ### Initialize the kubernetes namespace for this newly created account
 ```
 export user=xxxx
-curl -XPOST -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:8087/kubeinit
+curl -XPOST -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:6969/kubeinit
 ```
 Review the console log of the proxy and show the about successfully processing
 the local auth file. e.g:
@@ -58,7 +58,7 @@ with the Kube APIs.
 
 
 ```
-curl -XGET -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:8087/api
+curl -XGET -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:6969/api
 ```
 This should lead to the following output:
 ```
@@ -80,14 +80,14 @@ This should lead to the following output:
 
 ```
 # create:
-curl -XPOST -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json" -H "Accept: application/json, */*" -H "User-Agent: kubectl/v1.2.0 (linux/amd64) kubernetes/d800dca" -d '{"kind":"Deployment","apiVersion":"extensions/v1beta1","metadata":{"name":"test2","creationTimestamp":null,"labels":{"run":"test2"}},"spec":{"replicas":2,"selector":{"matchLabels":{"run":"test2"}},"template":{"metadata":{"creationTimestamp":null,"labels":{"run":"test2"}},"spec":{"containers":[{"name":"test2","image":"mrsabath/web-ms","resources":{"requests":{"memory":"128Mi"}}}]}},"strategy":{}},"status":{}}' localhost:8087/apis/extensions/v1beta1/namespaces/default/deployments
+curl -XPOST -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json" -H "Accept: application/json, */*" -H "User-Agent: kubectl/v1.2.0 (linux/amd64) kubernetes/d800dca" -d '{"kind":"Deployment","apiVersion":"extensions/v1beta1","metadata":{"name":"test2","creationTimestamp":null,"labels":{"run":"test2"}},"spec":{"replicas":2,"selector":{"matchLabels":{"run":"test2"}},"template":{"metadata":{"creationTimestamp":null,"labels":{"run":"test2"}},"spec":{"containers":[{"name":"test2","image":"mrsabath/web-ms","resources":{"requests":{"memory":"128Mi"}}}]}},"strategy":{}},"status":{}}' localhost:6969/apis/extensions/v1beta1/namespaces/default/deployments
 
 # list:
-curl -XGET -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:8087/api/v1/namespaces/default/pods
+curl -XGET -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:6969/api/v1/namespaces/default/pods
 
 # delete:
-curl -XDELETE -H "X-Tls-Client-Dn: /CN=$user" localhost:8087/apis/extensions/v1beta1/namespaces/default/replicasets/test2-xxxx
-curl -XDELETE -H "X-Tls-Client-Dn: /CN=$user"  localhost:8087/apis/extensions/v1beta1/namespaces/default/deployments/test2
+curl -XDELETE -H "X-Tls-Client-Dn: /CN=$user" localhost:6969/apis/extensions/v1beta1/namespaces/default/replicasets/test2-xxxx
+curl -XDELETE -H "X-Tls-Client-Dn: /CN=$user"  localhost:6969/apis/extensions/v1beta1/namespaces/default/deployments/test2
 ```
 
 <<<<<<< HEAD
