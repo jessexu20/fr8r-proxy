@@ -1,6 +1,6 @@
-# OpenRadiant Proxy
-Proxy is the component of OpenRadiant that intercepts the communication between
-the clients (Docker or Kubernetes) and the OpenRadiant cluster, using HTTP session
+# Fr8r Proxy
+Proxy is the component of Fr8r that intercepts the communication between
+the clients (Docker or Kubernetes) and the Fr8r cluster, using HTTP session
 hijacking. It validates the tenant and provided TLS certificates.
 It also redirects to proper shard when cluster sharing is used.
 
@@ -22,21 +22,21 @@ for /[DOCKER MACHINE] tag.
 If you have not done this already, clone the repository:
 
 ```bash
-git clone git@github.com:containercafe/containercafe.git
+git clone git@github.com:fr8r/fr8r.git
 # or
-git clone https://github.com/containercafe/containercafe.git
+git clone https://github.com/fr8r/fr8r.git
 ```
 
 #### Build proxy image
 The latest working image of API Proxy is already built and publicly available
-[https://hub.docker.com/r/containercafe/api-proxy/](https://hub.docker.com/r/containercafe/api-proxy/)
+[https://hub.docker.com/r/fr8r/api-proxy/](https://hub.docker.com/r/fr8r/api-proxy/)
 To build the image locally, using your local code, execute:
 
 ```bash
 cd proxy
 ./builddocker.sh
 ```
-To publish the image to Docker Hub see the steps [here](https://github.com/containercafe/containercafe/blob/master/docs/building-images.md#containercafeproxy)
+To publish the image to Docker Hub see the steps [here](https://github.com/fr8r/fr8r/blob/master/docs/building-images.md#fr8rproxy)
 
 The proxy image is very small but it's slow to build.
 If you are developing on the proxy you can build a bigger image in less time, execute:
@@ -54,7 +54,7 @@ on your own code (see above)
 When starting the proxy, provide the environment name e.g. _dev-vbox_:
 
 ```bash
-cd openradiant/proxy
+cd fr8r/proxy
 ./rundocker.sh <env_name>
 ```
 
@@ -82,7 +82,7 @@ Where:
     -l [INFO, WARNING, ERROR, FATAL] - set the log level for the proxy (optional)
     -v [non-negative integer] - set the log verbosity for the proxy (optional)
     -n - configuration for running with Nginx, no-SSL (optional)
-    -i [image_name] - run local image (optional), instead of public image [containercafe/api-proxy] (default)
+    -i [image_name] - run local image (optional), instead of public image [fr8r/api-proxy] (default)
 ```
 
 
@@ -95,9 +95,9 @@ CMD ["/api-proxy/bin/api-proxy", "6969"]
 
 The Proxy container mounts the volume to the following local location:
 ```
-~/.openradiant/envs/<env_name/
+~/.fr8r/envs/<env_name/
 e.g:
-~/.openradiant/envs/dev-vbox/
+~/.fr8r/envs/dev-vbox/
 ```
 And they are mounted locally to `/opt/tls_certs/` from the container.
 
@@ -128,7 +128,7 @@ source ./set_local_env.sh
 ./start_proxy.sh
 ```
 NOTE: There is a problem when running the proxy as a script on mac. (See the
-issue [#10](https://github.com/containercafe/containercafe/issues/10) Mac implements
+issue [#10](https://github.com/fr8r/fr8r/issues/10) Mac implements
 their own native SSL libraries for curl, therefore passing certs that are not
 in the keychain is a bit problematic. Install curl via Homebrew:
 `brew install curl`, keep the native curl, update your PATH to point at the new
@@ -170,15 +170,15 @@ output:
 # Setup docker environment:
 export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg
+export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg
 
 # Setup kubernetes environment:
-export KUBECONFIG=~/.openradiant/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg/kube-config
+export KUBECONFIG=~/.fr8r/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg/kube-config
 ```
 Copy and paste these commands in *a new terminal* (otherwise will no be able to
   make anymore calls to proxy container).
 
-Now you should be able to execute commands using OpenRadiant tenant that you
+Now you should be able to execute commands using Fr8r tenant that you
 just created:
 
 ```
@@ -189,7 +189,7 @@ docker inspect test
 
 kubectl get pods
 # create a new pod
-# assuming you are in openradiant/proxy directory:
+# assuming you are in fr8r/proxy directory:
 kubectl create -f ../examples/apps/k8s/pod-web.yaml
 
 # create a new deployment:
@@ -209,7 +209,7 @@ kubectl get rc
 kubectl get deployments
 
 ```
-To run the proxy against a different OpenRadiant shard, pass the IP of this shard
+To run the proxy against a different Fr8r shard, pass the IP of this shard
 as additional parameter of the script `create_tenant.sh`. E.g:
 ```
 docker exec api-proxy /api-proxy/create_tenant.sh test2 radiant02 192.168.10.11 192.168.10.4
@@ -265,13 +265,13 @@ There are 2 type of tests:
  In order to fix this problem, use `DOCKER_TLS_VERIFY=""` prefix for running 'docker' command
 
  * `docker: Error response from daemon: Task launched with invalid offers: Offer ea1a4d71-cf69-4292-90e7-530c77a5458b-O1 is no longer valid.`
- There is a caching problem on Mesos. Issue [#33](https://github.com/containercafe/containercafe/issues/33)
+ There is a caching problem on Mesos. Issue [#33](https://github.com/fr8r/fr8r/issues/33)
  is tracking it. Simply just repeat your last command. It should purge the cache
  and work again.
 
  * `docker: Error response from daemon: driver failed programming external connectivity on endpoint hjproxy (0910f89f1b27f3b05081a0bcec3ceadb6d335873d191b3f055ff82257cf77e5d): Error starting userland proxy: write /port/tcp:0.0.0.0:6969:tcp:172.17.0.2:6969/ctl: errno 526.` Please make sure no
  other process is running on port specified for proxy. Standalone proxy test on 6969?
 
- * `Could not read CA certificate "~/.openradiant/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem": open ~/.openradiant/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem: no such file or directory`
- Are you sure you are running your docker commands from `openradiant/proxy/`
+ * `Could not read CA certificate "~/.fr8r/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem": open ~/.fr8r/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem: no such file or directory`
+ Are you sure you are running your docker commands from `fr8r/proxy/`
  directory?

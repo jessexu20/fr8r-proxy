@@ -7,7 +7,7 @@ Note: Steps below detail multi-user testing. Testing can also be done with a sin
 
 Move to the `proxy-test` directory and run the build script
 ```bash
-cd ~/workspace/openradiant/proxy/proxy-test
+cd ~/workspace/fr8r/proxy/proxy-test
 # dev-vbox is the env name for the tiny example
 ./docker/build.sh -e dev-vbox
 ```
@@ -45,15 +45,15 @@ Writing to creds.json
 Certificates created for Apikey xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 Located at /opt/tls_certs/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 
-NOTE: the following commands must be executed from openradiant/proxy directory
+NOTE: the following commands must be executed from fr8r/proxy directory
 
 # Setup docker environment:
 export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
+export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 
 # Setup kubernetes environment:
-export KUBECONFIG=~/.openradiant/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX/kube-config
+export KUBECONFIG=~/.fr8r/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX/kube-config
 ```
 For each user you need to remember the API key (e.g. `xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX`).
 

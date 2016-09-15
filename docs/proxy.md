@@ -1,6 +1,6 @@
-# OpenRadiant API Wrapper - Proxy
-Proxy is the component of OpenRadiant that intercepts the communication between
-the clients (Docker or Kubernetes) and the OpenRadiant cluster, using HTTP session
+# Fr8r API Wrapper - Proxy
+Proxy is the component of Fr8r that intercepts the communication between
+the clients (Docker or Kubernetes) and the Fr8r cluster, using HTTP session
 hijacking. It validates the tenant and provided TLS certificates. The complete
 list of features:
 *Completed items are marked*
@@ -20,9 +20,9 @@ list of features:
   - [] Metering and chargeback management
 - [] Prototyping new features (e.g. Powerstrip for Docker)
 
-## Overview of OpenRadiant Proxy
-![Image of Proxy](media/2016-07.OpenRadiantProxy.png)
-OpenRadiant administrator creates TLS certificate and key for each new OpenRadiant
+## Overview of Fr8r Proxy
+![Image of Proxy](media/2016-07.Fr8rProxy.png)
+Fr8r administrator creates TLS certificate and key for each new Fr8r
 user and makes them available to the user. User configures the `kubectl` and `docker`
 clients with the provided TLS certificates and the IP address of the proxy.
 Each user request received by proxy is redirected to specific handler based on
@@ -33,7 +33,7 @@ managed by a single proxy.
 
 
 
-## OpenRadiant Proxy Details
+## Fr8r Proxy Details
 ![Image of Proxy details](media/2016-05.Proxy-details.png)
 
 ## Single integration point for all the services
@@ -62,7 +62,7 @@ managed by a single proxy.
 * Possibly removes or masquarades the detailed information that might not be exposed to the end user e.g. internal hostname or IP of the HA cluster member
 
 ## Sharding Support
-* Shard –instance of OpenRadiant cluster
+* Shard –instance of Fr8r cluster
 * Shard might function as Availability Zone
 * Tenant is assigned to a specific shard using VIP
 * Allows switching tenants between shards

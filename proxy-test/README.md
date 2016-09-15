@@ -6,10 +6,10 @@ Note: Steps below detail multi-user testing. Testing can also be done with a sin
 
 ## Step 1: Terminals
 Open as many terminals as test tenants desired. In this example, we will have 3 tenants - test1, test2, test3.
-Therefore, open 3 different terminal windows and cd to location where you have cloned this openradiant project.
+Therefore, open 3 different terminal windows and cd to location where you have cloned this fr8r project.
 Then cd to proxy directory. E.g:
 ```bash
-cd ~/workspace/openradiant/proxy
+cd ~/workspace/fr8r/proxy
 ```
 
 ## Step 2: Certificates for test tenants
@@ -32,10 +32,10 @@ The certificate creation script will output few export statements. For example: 
 # Setup docker environment:
 export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I
+export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I
 
 # Setup kubernetes environment:
-export KUBECONFIG=~/.openradiant/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I/kube-config
+export KUBECONFIG=~/.fr8r/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I/kube-config
 ```
 Copy and paste the first 2 lines into the test terminal.
 To run the test successfully, `DOCKER_CERT_PATH` and `KUBECONFIG` must be absolute paths.

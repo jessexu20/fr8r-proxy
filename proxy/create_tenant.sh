@@ -90,7 +90,7 @@ DOCKER_HOST="$PROXY_IP:6969"
 DOCKER_TLS_VERIFY=1
 if [ "$CERT_ROOT" = "" ] ; then
     # when running from the container, specify the path to shared volume
-    DOCKER_CERT_PATH="~/.openradiant/envs/$env_name/$SHARD_NAME/$API_KEY"
+    DOCKER_CERT_PATH="~/.fr8r/envs/$env_name/$SHARD_NAME/$API_KEY"
 else
     # when running as a script, use actual path
     DOCKER_CERT_PATH="$TLS_dir"

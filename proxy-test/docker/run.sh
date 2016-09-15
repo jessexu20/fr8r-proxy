@@ -4,7 +4,7 @@ function main {
     local CERTS_DIR=`docker_image_env api-proxy-tests CERTS_DIR`
     local LOGS_DIR=`docker_image_env api-proxy-tests LOGS_DIR`
     local ENV_NAME=`docker_image_env api-proxy-tests ENV_NAME`
-    local ENVS_DIR="$HOME/.openradiant/envs"
+    local ENVS_DIR="$HOME/.fr8r/envs"
 
     local tenants=()
     if [[ `echo "$CI" | tr '[:upper:]' '[:lower:]'` == true && `check_for_tenants "$@"` == false ]]; then
