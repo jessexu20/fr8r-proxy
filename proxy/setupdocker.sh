@@ -20,7 +20,7 @@ if [[ "$1" == "" || "$1" == -* ]] ; then
 fi
 env_name="$1"
 
-CERTS="$HOME/.openradiant/envs/$env_name"
+CERTS="$HOME/.fr8r/envs/$env_name"
 ACERTS="$CERTS/admin-certs"
 
 	if [ ! -d "$ACERTS" ]; then

@@ -14,7 +14,7 @@ Where:
     -l [INFO, WARNING, ERROR, FATAL] - set the log level for the proxy (optional)
     -v [non-negative integer] - set the log verbosity for the proxy (optional)
     -n - configuration for running with Nginx, no-SSL (optional)
-    -i [image_name] - run local image (optional), instead of public image [containercafe/api-proxy] (default)
+    -i [image_name] - run local image (optional), instead of public image [fr8r/api-proxy] (default)
 
 HELPMEHELPME
 }
@@ -29,9 +29,9 @@ function main {
 
     # manage certificates - copy them to admin-certs
     #local CERT_MASTER="../ansible/certs/dev-vbox-radiant01"
-    local CERTS="$HOME/.openradiant/envs/$env_name"
+    local CERTS="$HOME/.fr8r/envs/$env_name"
     local ACERTS="$CERTS/admin-certs"
-    local IMG="containercafe/api-proxy"
+    local IMG="fr8r/api-proxy"
     if [ ! -d "$ACERTS" ]; then
       echo "missing $ACERTS directory. Execute ansible scripts first"
       exit 99
@@ -90,7 +90,7 @@ function main {
     
     set -x
     # start new container instance using public api proxy image. Map the volume to CERTS
-    #docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 6969:6969 -e "env_name=$env_name" --name api-proxy containercafe/api-proxy
+    #docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 6969:6969 -e "env_name=$env_name" --name api-proxy fr8r/api-proxy
     # to run your own image, built using `builddocker.sh` script, comment out the line above on un-comment below:
     docker run "${EXTRA_FLAGS[@]}" -v "$CERTS":/opt/tls_certs -p 6969:6969 -e "env_name=$env_name" --name api-proxy $IMG
 }
