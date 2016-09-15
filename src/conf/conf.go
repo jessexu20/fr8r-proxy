@@ -57,7 +57,7 @@ var swarm_auth_label = "com.ibm.radiant.tenant.0" // the label that is used by s
 // parameter name used for injecting label to kubernetes pods
 var annotation_ext_label = "containers-annotations.alpha.kubernetes.io"
 
-var default_listen_port = 8087
+var default_listen_port = 6969
 var Default_redirect_host = "" //TODO remove this testing default
 
 func init() {

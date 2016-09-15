@@ -63,5 +63,5 @@ ENV log_file_path="/tmp/feeds/logstash_api_proxy" \
 # copy all the scripts needed by proxy
 COPY create_tenant.sh mk_user_cert.sh mk_kubeconfig.sh build.info ./
 
-EXPOSE 8087
-CMD ["/api-proxy/bin/api-proxy", "8087"]
+EXPOSE 6969
+CMD ["/api-proxy/bin/api-proxy", "6969"]

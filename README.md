@@ -89,8 +89,8 @@ Where:
 This will start the Proxy as a container named `api-proxy`, running in the current
 terminal, on port specified in [Dockerfile](Dockerfile) e.g:
 ```
-EXPOSE 8087
-CMD ["/api-proxy/bin/api-proxy", "8087"]
+EXPOSE 6969
+CMD ["/api-proxy/bin/api-proxy", "6969"]
 ```
 
 The Proxy container mounts the volume to the following local location:
@@ -168,7 +168,7 @@ the newly created tenant, including the location of the certs. Here is the sampl
 output:
 ```bash
 # Setup docker environment:
-export DOCKER_HOST=localhost:8087
+export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/.openradiant/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg
 
@@ -244,7 +244,7 @@ for your tenant. E.g:
 
 ```bash
 export APIKEY=PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4
-export PROXY=192.168.10.4:8087
+export PROXY=192.168.10.4:6969
 curl -XGET -H "X-Tls-Client-Dn: /CN=$APIKEY" -H "Content-Type: application/json" $PROXY/api
 ```
 
@@ -261,7 +261,7 @@ There are 2 type of tests:
  * `Error response from daemon: client is newer than server (client API version: 1.24, server API version: 1.22)`
  run `export DOCKER_API_VERSION=1.22` before running any docker commands.
 
- * `An error occurred trying to connect: Get https://localhost:8087/v1.21/images/4a419cdeaf69/json: tls: oversized record received with length 20527[]`
+ * `An error occurred trying to connect: Get https://localhost:6969/v1.21/images/4a419cdeaf69/json: tls: oversized record received with length 20527[]`
  In order to fix this problem, use `DOCKER_TLS_VERIFY=""` prefix for running 'docker' command
 
  * `docker: Error response from daemon: Task launched with invalid offers: Offer ea1a4d71-cf69-4292-90e7-530c77a5458b-O1 is no longer valid.`
@@ -269,8 +269,8 @@ There are 2 type of tests:
  is tracking it. Simply just repeat your last command. It should purge the cache
  and work again.
 
- * `docker: Error response from daemon: driver failed programming external connectivity on endpoint hjproxy (0910f89f1b27f3b05081a0bcec3ceadb6d335873d191b3f055ff82257cf77e5d): Error starting userland proxy: write /port/tcp:0.0.0.0:8087:tcp:172.17.0.2:8087/ctl: errno 526.` Please make sure no
- other process is running on port specified for proxy. Standalone proxy test on 8087?
+ * `docker: Error response from daemon: driver failed programming external connectivity on endpoint hjproxy (0910f89f1b27f3b05081a0bcec3ceadb6d335873d191b3f055ff82257cf77e5d): Error starting userland proxy: write /port/tcp:0.0.0.0:6969:tcp:172.17.0.2:6969/ctl: errno 526.` Please make sure no
+ other process is running on port specified for proxy. Standalone proxy test on 6969?
 
  * `Could not read CA certificate "~/.openradiant/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem": open ~/.openradiant/<env>/<shard>/fprVv76aAWfrmxboOxsO6dbzfZcITidkIwBslPgMAchFfwZI/ca.pem: no such file or directory`
  Are you sure you are running your docker commands from `openradiant/proxy/`
