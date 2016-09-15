@@ -1,4 +1,0 @@
-ansible>=2.1.1
-netaddr
-docker-py
-setuptools>=11.3
