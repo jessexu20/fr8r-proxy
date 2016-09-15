@@ -1,41 +1,19 @@
-# ContainerCafe images and how to build them
+# Fr8r Proxy images and how to build them
 
-## openradiant/remoteabac
 
-``` bash
-cd openradiant/remoteabac
-docker login (with dockerhub creds)
-docker build -t openradiant/remoteabac .
-docker push openradiant/remoteabac
-```
-
-## containercafe/proxy
+## fr8r-proxy
 
 ```bash
 docker login (with dockerhub creds)
-cd proxy
-./builddocker.sh
+cd fr8r-proxy
+# to build for development (large image, fast compile):
+./builddocker.sh -f Dockerfile.dev
+# to build for deployment (smaller image, longer compile):
+./buildocker.sh
+
 # see your new image:
 docker images
-docker tag api-proxy containercafe/api-proxy
-docker push containercafe/api-proxy
+docker tag api-proxy fr8r/api-proxy
+docker push fr8r/api-proxy
 ```
 
-## openradiant/km
-
-Building is straightforward:
-
-``` bash
-cd openradiant/misc/dockerfiles/km
-docker login (with dockerhub creds)
-docker build -t openradiant/km:$tag .
-docker push openradiant/km:$tag
-```
-
-... where `$tag` is the value of `K8S_BRANCH` in the Dockerfile ---
-i.e., the git tag or branch of
-https://github.com/ibm-contribs/kubernetes.git that is being built.
-
-The selection of *what* to build is more complicated.  The choice is
-in the Dockerfile.  Documentation needed for the why behind that
-choice.
