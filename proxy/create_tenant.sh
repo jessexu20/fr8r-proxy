@@ -13,7 +13,7 @@ Where:
     api_proxy_ip = IP address of API Proxy, e.g: 192.168.10.4
 
  Note: $env_name must be defined via environment variable
- 
+
 HELPMEHELPME
 }
 
@@ -24,7 +24,7 @@ function generate_api_key {
 
 function append_to_creds {
     local creds_path="$1"
-    
+
     if [ ! -f "$creds_path" ]; then
         echo "Creating $(basename "$creds_path") file"
         touch "$creds_path"
@@ -121,7 +121,11 @@ export KUBECONFIG=$DOCKER_CERT_PATH/kube-config
 ENV
 
 # Initilize the kubernetes tenant
-RC=`curl -w "%{http_code}" -k -XPOST -s -o /dev/null --cert "$TLS_dir/cert.pem" --key "$TLS_dir/key.pem" --cacert "$TLS_dir/ca.pem" -H "Content-Type: application/json"  https://localhost:6969/kubeinit  2>&1` 
+RC=`curl -w "%{http_code}" -k -XPOST -s -o /dev/null --cert "$TLS_dir/cert.pem" --key "$TLS_dir/key.pem" --cacert "$TLS_dir/ca.pem" -H "Content-Type: application/json"  https://localhost:6969/kubeinit  2>&1`
 if [ "$RC" != "200" ] ; then
    echo "ERROR: Could not initialize kubernetes tenant"
 fi
+
+cd $TLS_dir
+tar -zcvf $API_KEY.tgz *
+cd -
