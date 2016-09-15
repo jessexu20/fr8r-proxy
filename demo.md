@@ -84,10 +84,6 @@ curl -XPOST -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json" 
 
 # list:
 curl -XGET -H "X-Tls-Client-Dn: /CN=$user" -H "Content-Type: application/json"   localhost:6969/api/v1/namespaces/default/pods
-
-# delete:
-curl -XDELETE -H "X-Tls-Client-Dn: /CN=$user" localhost:6969/apis/extensions/v1beta1/namespaces/default/replicasets/test2-xxxx
-curl -XDELETE -H "X-Tls-Client-Dn: /CN=$user"  localhost:6969/apis/extensions/v1beta1/namespaces/default/deployments/test2
 ```
 
 <<<<<<< HEAD
