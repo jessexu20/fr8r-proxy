@@ -21,9 +21,9 @@ The build script has 3 possible flags (`-e` is the only one required):
 
 After starting the API Proxy, execute the script to create test tenants:
 ```bash
-docker exec api-proxy /api-proxy/create_tenant.sh test1 radiant01 192.168.10.2
-docker exec api-proxy /api-proxy/create_tenant.sh test2 radiant01 192.168.10.2
-docker exec api-proxy /api-proxy/create_tenant.sh test3 radiant01 192.168.10.2
+docker exec api-proxy /api-proxy/create_tenant.sh test1 shard1 192.168.10.2
+docker exec api-proxy /api-proxy/create_tenant.sh test2 shard1 192.168.10.2
+docker exec api-proxy /api-proxy/create_tenant.sh test3 shard1 192.168.10.2
 ```
 To view all the accounts valid for this proxy: 
 ```bash
@@ -43,17 +43,17 @@ subject=/CN=xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 Getting CA Private Key
 Writing to creds.json
 Certificates created for Apikey xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
-Located at /opt/tls_certs/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
+Located at /opt/tls_certs/shard1/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 
 NOTE: the following commands must be executed from fr8r/proxy directory
 
 # Setup docker environment:
 export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
+export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/shard1/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX
 
 # Setup kubernetes environment:
-export KUBECONFIG=~/.fr8r/envs/dev-vbox/radiant01/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX/kube-config
+export KUBECONFIG=~/.fr8r/envs/dev-vbox/shard1/xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX/kube-config
 ```
 For each user you need to remember the API key (e.g. `xoaI1UGKUA4neu6Tubv67nh7XSBmubuVYPrC3MA3E4WXETOX`).
 
@@ -72,9 +72,9 @@ Suppose each test wants to examine a lifecycle of 3 containers and 3 pods.
 Then run:
 ```bash
 ./docker/run.sh -c 3 -p 3 \
-                -t radiant01:test1:nVdIhfJKFtEM2G9hpkJI5EVZ5VGeFNLBoFBA2B6zJqaSZ71W \
-                -t radiant01:test2:JpjnQqnDQQCnNlc9bWJJoznhjr4awLdVe10B45LRCE31CqDh \
-                -t radiant01:test3:PBJ7ZKbi0hDSBFStFY5K9TnNdojEhUZ1goE1Swn3G6fle5iR
+                -t shard1:test1:nVdIhfJKFtEM2G9hpkJI5EVZ5VGeFNLBoFBA2B6zJqaSZ71W \
+                -t shard1:test2:JpjnQqnDQQCnNlc9bWJJoznhjr4awLdVe10B45LRCE31CqDh \
+                -t shard1:test3:PBJ7ZKbi0hDSBFStFY5K9TnNdojEhUZ1goE1Swn3G6fle5iR
 ```
 
 #### Running on Continuous Integration (CI)

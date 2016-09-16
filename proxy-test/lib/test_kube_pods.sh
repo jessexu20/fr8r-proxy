@@ -207,7 +207,7 @@ function setup_env {
     fi
 
     if [[ "$KUBECONFIG" == "" ]]; then
-        export KUBECONFIG="$DIR/conf/kube/kubeconfig-radiant01.yaml"
+        export KUBECONFIG="$DIR/conf/kube/kubeconfig-shard1.yaml"
     fi
     
     kubectl config view

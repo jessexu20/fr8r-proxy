@@ -28,7 +28,7 @@ function main {
     local env_name="$1"
 
     # manage certificates - copy them to admin-certs
-    #local CERT_MASTER="../ansible/certs/dev-vbox-radiant01"
+    #local CERT_MASTER="../ansible/certs/dev-vbox-shard1"
     local CERTS="$HOME/.fr8r/envs/$env_name"
     local ACERTS="$CERTS/admin-certs"
     local IMG="fr8r/api-proxy"

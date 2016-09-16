@@ -3,4 +3,4 @@ lib/*
 !lib/*.sh
 
 conf/kube/*
-!conf/kube/kubeconfig-radiant01.yaml
+!conf/kube/kubeconfig-shard1.yaml

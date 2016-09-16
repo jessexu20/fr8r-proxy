@@ -279,7 +279,7 @@ func kubeUpdateBody(r *http.Request, namespace string) (body []byte, err error) 
 	//	  		"name":"testtt1",
 	//	  		"namespace":"s21f85bc8-5a1a-403a-8a82-cdb757defd72-default",
 	//	  		"annotations":{
-	//	  			containers-annotations.alpha.kubernetes.io: "{ \"com.ibm.radiant.tenant.0\": \"stest1-default\",  \"OriginalName\": \"kube-web-server\" }"
+	//	  			containers-annotations.alpha.kubernetes.io: "{ \"com.ibm.fr8r.tenant.0\": \"stest1-default\",  \"OriginalName\": \"kube-web-server\" }"
 	//
 	// and the one to create depoloyment (group):
 	//  	"kind": "Deployment",
@@ -302,7 +302,7 @@ func kubeUpdateBody(r *http.Request, namespace string) (body []byte, err error) 
 	//				"metadata": {
 	//					"creationTimestamp": null,
 	//					"annotations":{
-	//	  					containers-annotations.alpha.kubernetes.io: "{ \"com.ibm.radiant.tenant.0\": \"stest1-default\",  \"OriginalName\": \"kube-web-server\" }"
+	//	  					containers-annotations.alpha.kubernetes.io: "{ \"com.ibm.fr8r.tenant.0\": \"stest1-default\",  \"OriginalName\": \"kube-web-server\" }"
 	//					"labels": {
 	//						"run": "k3"
 	//					}

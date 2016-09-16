@@ -49,10 +49,10 @@ var kube_admin_cert_file = "admin.pem"
 var service_user_template = "system:serviceaccount:$namespace:default"
 
 // swarm parameters:
-var swarm_master_port = 2375                      // swarm master port
-var swarm_node_port = 2375                        // swarm slave nodes port
-var swarm_auth_header = "X-Auth-TenantId"         // header name required by swarm-auth
-var swarm_auth_label = "com.ibm.radiant.tenant.0" // the label that is used by swarm to select tenants
+var swarm_master_port = 2375                   // swarm master port
+var swarm_node_port = 2375                     // swarm slave nodes port
+var swarm_auth_header = "X-Auth-TenantId"      // header name required by swarm-auth
+var swarm_auth_label = "com.ibm.fr8r.tenant.0" // the label that is used by swarm to select tenants
 
 // parameter name used for injecting label to kubernetes pods
 var annotation_ext_label = "containers-annotations.alpha.kubernetes.io"
