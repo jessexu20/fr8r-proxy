@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM golang:1.6.2
 
 # Add Labels to image that shows git build details in metadata
 ARG git_commit_id=unknown
@@ -20,22 +20,14 @@ LABEL git-commit-id=${git_commit_id} \
       jenkins-build-number=${jenkins_build_number}
 
 WORKDIR /api-proxy
-COPY src/ ./src/
 
-RUN apt-get update \
- && apt-get -y install --no-install-recommends ca-certificates curl git \
- && curl -sSLO https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz \
- && tar -C /usr/local -xzf go1.6.2.linux-amd64.tar.gz \
- && rm -f go1.6.2.linux-amd64.tar.gz \
- && export PATH=$PATH:/usr/local/go/bin \
- && export GOPATH=/api-proxy \
- && go get "github.com/golang/glog" \
- && go build -o bin/api-proxy src/api-proxy/api-proxy.go \
- && rm -rf /usr/local/go \
- && apt-get -y remove git \
- && apt-get clean autoclean \
- && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/*
+ENV GOPATH /api-proxy
+RUN apt-get update
+RUN apt-get -y install --no-install-recommends ca-certificates curl git \
+ && go get "github.com/golang/glog"
+
+COPY src/ ./src/
+RUN go build -o bin/api-proxy src/api-proxy/api-proxy.go
 
 ENV log_file_path="/tmp/feeds/logstash_api_proxy" \
     docker_port="8089" \
