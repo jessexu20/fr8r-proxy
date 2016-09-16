@@ -15,9 +15,9 @@ export ccsapi_host=10.140.34.174:8081
 export consul_ip=10.140.34.174
 
 # copy the certs
-cp -f ../ansible/certs/dev-vbox-radiant01/ca* "$(dirname "$ca_cert_file")"
-cp -f ../ansible/certs/dev-vbox-radiant01/admin-key.pem "$kube_admin_key_file"
-cp -f ../ansible/certs/dev-vbox-radiant01/admin.pem "$kube_admin_cert_file"
+cp -f ../ansible/certs/dev-vbox-shard1/ca* "$(dirname "$ca_cert_file")"
+cp -f ../ansible/certs/dev-vbox-shard1/admin-key.pem "$kube_admin_key_file"
+cp -f ../ansible/certs/dev-vbox-shard1/admin.pem "$kube_admin_cert_file"
 ./gen_server_certs.sh
 
 # start proxy

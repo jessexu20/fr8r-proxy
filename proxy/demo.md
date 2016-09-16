@@ -1,7 +1,7 @@
-# Open Radiant - IBM Containers
+# Fr8r - IBM Containers
 
 ## Demo 1
-Demonstrate the separation of Radiant from CCSAPIs authentication. Build TLS
+Demonstrate the separation of Fr8r from CCSAPIs authentication. Build TLS
 certificates for the specified space id. Add this new space into local
 `creds.json` file and reference the newly created TLS certificates based on
 dynamically created API key. Use these certificates to send a request to kubernetes  

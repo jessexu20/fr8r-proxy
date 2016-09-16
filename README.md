@@ -154,7 +154,7 @@ E.g.
 ```
 docker ps
 docker exec api-proxy /api-proxy/create_tenant.sh <tenant> <shard_name> <shared_ip> <api_proxy_ip>
-docker exec api-proxy /api-proxy/create_tenant.sh test1 radiant01 192.168.10.2 192.168.10.4
+docker exec api-proxy /api-proxy/create_tenant.sh test1 shard1 192.168.10.2 192.168.10.4
 ```
 
 This command will display the details about the newly created TLS certs, including
@@ -170,10 +170,10 @@ output:
 # Setup docker environment:
 export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg
+export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/shard1/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg
 
 # Setup kubernetes environment:
-export KUBECONFIG=~/.fr8r/envs/dev-vbox/radiant01/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg/kube-config
+export KUBECONFIG=~/.fr8r/envs/dev-vbox/shard1/ITNqyoU6Xe6ttgq7yQNwOeaQm6Ms8vauJqEQclghh3sdzDpg/kube-config
 ```
 Copy and paste these commands in *a new terminal* (otherwise will no be able to
   make anymore calls to proxy container).
@@ -212,7 +212,7 @@ kubectl get deployments
 To run the proxy against a different Fr8r shard, pass the IP of this shard
 as additional parameter of the script `create_tenant.sh`. E.g:
 ```
-docker exec api-proxy /api-proxy/create_tenant.sh test2 radiant02 192.168.10.11 192.168.10.4
+docker exec api-proxy /api-proxy/create_tenant.sh test2 shard2 192.168.10.11 192.168.10.4
 ```
 
 You can also manually change the values in "/api-proxy/creds.json" file that lists
@@ -230,7 +230,7 @@ docker exec api-proxy cat /opt/tls_certs/creds.json
 
 Every entry of the `creds.json` has this format:
 ```json
-{"Status":200, "Node":"192.168.10.2", "Docker_id":"", "Container":"", "Swarm_shard":true, "Tls_override":true, "Space_id":"sample_entry", "Reg_namespace":"swarm", "Apikey":"PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4", "Orguuid":"orgname", "Userid":"userid", "Endpoint_type":"radiant", "TLS_path":"/opt/tls_certs/radiant01/PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4"}
+{"Status":200, "Node":"192.168.10.2", "Docker_id":"", "Container":"", "Swarm_shard":true, "Tls_override":true, "Space_id":"sample_entry", "Reg_namespace":"swarm", "Apikey":"PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4", "Orguuid":"orgname", "Userid":"userid", "Endpoint_type":"radiant", "TLS_path":"/opt/tls_certs/shard1/PV9S5hQARFmg0pVJwaPxbP588GdVKeYF1YGOePDvRNAGpyl4"}
 ```
 
 

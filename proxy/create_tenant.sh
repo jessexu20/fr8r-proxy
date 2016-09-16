@@ -8,7 +8,7 @@ helpme()
 Syntax: ${0} <tenant_id> <shard_name> <shard_ip> <api_proxy_ip>
 Where:
     tenant_id = id of the desired tenant
-    shard_name = name of the shard, e.g: radiant01
+    shard_name = name of the shard, e.g: shard1
     shard_ip = IP address of the shard, e.g: 192.168.10.2
     api_proxy_ip = IP address of API Proxy, e.g: 192.168.10.4
 

@@ -11,14 +11,14 @@ clusters:
 - cluster:
     server: https://${PROXY_IP}:6969
     certificate-authority: ca.pem
-  name: radiant
+  name: shard1
 contexts:
 - context:
-    cluster: radiant
+    cluster: shard1
     namespace: s${TENANT_ID}-default
     user: $TENANT_ID
-  name: radiant
-current-context: radiant
+  name: shard1
+current-context: shard1
 kind: Config
 preferences: {}
 users:

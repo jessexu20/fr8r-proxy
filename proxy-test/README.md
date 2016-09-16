@@ -15,9 +15,9 @@ cd ~/workspace/fr8r/proxy
 ## Step 2: Certificates for test tenants
 In every terminal, execute the script to create one test tenant:
 ```bash
-docker exec api-proxy /api-proxy/create_tenant.sh test1 radiant01 192.168.10.2
-docker exec api-proxy /api-proxy/create_tenant.sh test2 radiant01 192.168.10.2
-docker exec api-proxy /api-proxy/create_tenant.sh test3 radiant01 192.168.10.2
+docker exec api-proxy /api-proxy/create_tenant.sh test1 shard1 192.168.10.2
+docker exec api-proxy /api-proxy/create_tenant.sh test2 shard1 192.168.10.2
+docker exec api-proxy /api-proxy/create_tenant.sh test3 shard1 192.168.10.2
 ```
 
 This will create the certificates for this tenant and the configurations necessary to run the tests.
@@ -32,10 +32,10 @@ The certificate creation script will output few export statements. For example: 
 # Setup docker environment:
 export DOCKER_HOST=localhost:6969
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I
+export DOCKER_CERT_PATH=~/.fr8r/envs/dev-vbox/shard1/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I
 
 # Setup kubernetes environment:
-export KUBECONFIG=~/.fr8r/envs/dev-vbox/radiant01/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I/kube-config
+export KUBECONFIG=~/.fr8r/envs/dev-vbox/shard1/7uJNzJqK5T33A4j9XkH6Fd1dQwCza0zHGHeFokmRJOWfz87I/kube-config
 ```
 Copy and paste the first 2 lines into the test terminal.
 To run the test successfully, `DOCKER_CERT_PATH` and `KUBECONFIG` must be absolute paths.
